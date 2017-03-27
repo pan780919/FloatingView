@@ -101,6 +101,11 @@ class TrashView extends FrameLayout implements ViewTreeObserver.OnPreDrawListene
     private static final int LONG_PRESS_TIMEOUT = ViewConfiguration.getLongPressTimeout();
 
     /**
+     * Overlay Type
+     */
+    private static final int OVERLAY_TYPE;
+
+    /**
      * WindowManager
      */
     private final WindowManager mWindowManager;
@@ -180,6 +185,16 @@ class TrashView extends FrameLayout implements ViewTreeObserver.OnPreDrawListene
      */
     private boolean mIsEnabled;
 
+    static {
+        // TODO:Fix it after Android O release
+        // if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1 && !Build.VERSION.CODENAME.equals("O")) {
+            OVERLAY_TYPE = WindowManager.LayoutParams.TYPE_PRIORITY_PHONE;
+        } else {
+            OVERLAY_TYPE = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+        }
+    }
+
     /**
      * コンストラクタ
      *
@@ -196,7 +211,7 @@ class TrashView extends FrameLayout implements ViewTreeObserver.OnPreDrawListene
         mParams = new WindowManager.LayoutParams();
         mParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
         mParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
-        mParams.type = WindowManager.LayoutParams.TYPE_PRIORITY_PHONE;
+        mParams.type = OVERLAY_TYPE;
         mParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE |
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -40,7 +41,7 @@ public class CustomFloatingViewService extends Service implements FloatingViewLi
     /**
      * 通知ID
      */
-    private static final int NOTIFICATION_ID = 908114;
+    public static final int NOTIFICATION_ID = 908114;
 
     /**
      * Prefs Key(Last position X)
@@ -99,8 +100,12 @@ public class CustomFloatingViewService extends Service implements FloatingViewLi
         final FloatingViewManager.Options options = loadOptions(metrics);
         mFloatingViewManager.addViewToWindow(iconView, options);
 
-        // 常駐起動
-        startForeground(NOTIFICATION_ID, createNotification());
+        // TODO:Fix it after Android O release
+        // if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1 && !Build.VERSION.CODENAME.equals("O")) {
+            // 常駐起動
+            startForeground(NOTIFICATION_ID, createNotification(this));
+        }
 
         return START_REDELIVER_INTENT;
     }
@@ -157,20 +162,22 @@ public class CustomFloatingViewService extends Service implements FloatingViewLi
 
     /**
      * 通知を表示します。
+     *
+     * @param context {@link Context}
      */
-    private Notification createNotification() {
-        final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+    public static Notification createNotification(Context context) {
+        final NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setWhen(System.currentTimeMillis());
         builder.setSmallIcon(R.mipmap.ic_launcher);
-        builder.setContentTitle(getString(R.string.mail_content_title));
-        builder.setContentText(getString(R.string.content_text));
+        builder.setContentTitle(context.getString(R.string.mail_content_title));
+        builder.setContentText(context.getString(R.string.content_text));
         builder.setOngoing(true);
         builder.setPriority(NotificationCompat.PRIORITY_MIN);
         builder.setCategory(NotificationCompat.CATEGORY_SERVICE);
 
         // PendingIntent作成
-        final Intent notifyIntent = new Intent(this, DeleteActionActivity.class);
-        PendingIntent notifyPendingIntent = PendingIntent.getActivity(this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        final Intent notifyIntent = new Intent(context, DeleteActionActivity.class);
+        PendingIntent notifyPendingIntent = PendingIntent.getActivity(context, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(notifyPendingIntent);
 
         return builder.build();

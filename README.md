@@ -81,10 +81,15 @@ example)
     </application>
 ```
   
-7) Describe the process to start the Service (example of Fragment)
+7) Describe the process to start the Service(run on foreground)
 ```java
     final Activity activity = getActivity();
-    activity.startService(new Intent(activity, ChatHeadService.class));
+    final Intent intent = new Intent(activity, ChatHeadService.class);
+    if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
+        activity.startService(intent);
+    } else {
+        notificationManager.startServiceInForeground(intent, notificationId, notification);
+    }
 ```
 
 ## Static Options
@@ -125,6 +130,9 @@ mFloatingViewManager.setActionTrashIconImage(R.drawable.ic_trash_action);
 |setTrashViewEnabled|If false, the trash icon does not show during dragging.<br>(default) true|
 
 # Revisions
+## Update in 2.3
+- Support Android O
+    - If you are targeting Android O or higher, you must use `NotificationManager.startServiceInForeground()` instead of `Context.startService()`.
 ## Update in 2.2
 - Support for large image for FloatingView (not complete, but almost works)([#16](../../issues/16))
 - Support size specification of FloatingView([#16](../../issues/16))

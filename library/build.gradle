@@ -1,19 +1,19 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion as Integer
+    compileSdkVersion rootProject.ext.compileSdkVersion as String
     buildToolsVersion rootProject.ext.buildToolsVersion as String
 
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion as Integer
-        targetSdkVersion rootProject.ext.targetSdkVersion as Integer
+        targetSdkVersion rootProject.ext.targetSdkVersion as String
         versionCode 1
         versionName "1.0"
     }
 }
 
 dependencies {
-    compile 'com.android.support:support-annotations:25.1.0'
+    compile 'com.android.support:support-annotations:26.0.0-alpha1'
 }
 
 // build a jar with source files

@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.DisplayMetrics;
@@ -31,7 +32,7 @@ public class ChatHeadService extends Service implements FloatingViewListener {
     /**
      * 通知ID
      */
-    private static final int NOTIFICATION_ID = 9083150;
+    public static final int NOTIFICATION_ID = 9083150;
 
     /**
      * FloatingViewManager
@@ -68,7 +69,11 @@ public class ChatHeadService extends Service implements FloatingViewListener {
         mFloatingViewManager.addViewToWindow(iconView, options);
 
         // 常駐起動
-        startForeground(NOTIFICATION_ID, createNotification());
+        // TODO:Fix it after Android O release
+        // if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1 && !Build.VERSION.CODENAME.equals("O")) {
+            startForeground(NOTIFICATION_ID, createNotification(this));
+        }
 
         return START_REDELIVER_INTENT;
     }
@@ -124,13 +129,15 @@ public class ChatHeadService extends Service implements FloatingViewListener {
     /**
      * 通知を表示します。
      * クリック時のアクションはありません。
+     *
+     * @param context {@link Context}
      */
-    private Notification createNotification() {
-        final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+    public static Notification createNotification(Context context) {
+        final NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setWhen(System.currentTimeMillis());
         builder.setSmallIcon(R.mipmap.ic_launcher);
-        builder.setContentTitle(getString(R.string.chathead_content_title));
-        builder.setContentText(getString(R.string.content_text));
+        builder.setContentTitle(context.getString(R.string.chathead_content_title));
+        builder.setContentText(context.getString(R.string.content_text));
         builder.setOngoing(true);
         builder.setPriority(NotificationCompat.PRIORITY_MIN);
         builder.setCategory(NotificationCompat.CATEGORY_SERVICE);

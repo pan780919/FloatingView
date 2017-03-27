@@ -127,6 +127,11 @@ class FloatingView extends FrameLayout implements ViewTreeObserver.OnPreDrawList
     static final int DEFAULT_HEIGHT = ViewGroup.LayoutParams.WRAP_CONTENT;
 
     /**
+     * Overlay Type
+     */
+    private static final int OVERLAY_TYPE;
+
+    /**
      * WindowManager
      */
     private final WindowManager mWindowManager;
@@ -286,6 +291,16 @@ class FloatingView extends FrameLayout implements ViewTreeObserver.OnPreDrawList
      */
     private final boolean mIsTablet;
 
+    static {
+        // TODO:Fix it after Android O release
+        // if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1 && !Build.VERSION.CODENAME.equals("O")) {
+            OVERLAY_TYPE = WindowManager.LayoutParams.TYPE_PRIORITY_PHONE;
+        } else {
+            OVERLAY_TYPE = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+        }
+    }
+
     /**
      * コンストラクタ
      *
@@ -299,7 +314,7 @@ class FloatingView extends FrameLayout implements ViewTreeObserver.OnPreDrawList
         mWindowManager.getDefaultDisplay().getMetrics(mMetrics);
         mParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
         mParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-        mParams.type = WindowManager.LayoutParams.TYPE_PRIORITY_PHONE;
+        mParams.type = OVERLAY_TYPE;
         mParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS |
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
