@@ -65,6 +65,7 @@ public class FloatingViewControlFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 showChatHead(getActivity(), true);
+                getActivity().finish();
             }
         });
         // カスタマイズデモの表示
