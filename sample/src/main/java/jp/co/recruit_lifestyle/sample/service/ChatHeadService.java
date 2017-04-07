@@ -57,6 +57,13 @@ public class ChatHeadService extends Service implements FloatingViewListener {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, getString(R.string.chathead_click_message));
+                           AlertDialog.Builder builder = new AlertDialog.Builder(ChatHeadService.this);
+                builder.setTitle("Test dialog");
+                builder.setMessage("Content");
+                    AlertDialog alert = builder.create();
+                    alert.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+                    alert.show();
+                
             }
         });
 
