@@ -1,9 +1,16 @@
 package jp.co.recruit_lifestyle.sample.service;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.Service;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.PixelFormat;
+import android.net.Uri;
+import android.os.Environment;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.DisplayMetrics;
@@ -12,6 +19,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.Date;
 
 import jp.co.recruit.floatingview.R;
 import jp.co.recruit_lifestyle.android.floatingview.FloatingViewListener;
@@ -22,7 +34,7 @@ import jp.co.recruit_lifestyle.android.floatingview.FloatingViewManager;
  * ChatHead Service
  */
 public class ChatHeadService extends Service implements FloatingViewListener {
-
+    Context context;
     /**
      * デバッグログ用のタグ
      */
@@ -47,7 +59,7 @@ public class ChatHeadService extends Service implements FloatingViewListener {
         if (mFloatingViewManager != null) {
             return START_STICKY;
         }
-
+        context = this;
         final DisplayMetrics metrics = new DisplayMetrics();
         final WindowManager windowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getMetrics(metrics);
@@ -57,13 +69,24 @@ public class ChatHeadService extends Service implements FloatingViewListener {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, getString(R.string.chathead_click_message));
-                           AlertDialog.Builder builder = new AlertDialog.Builder(ChatHeadService.this);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(ChatHeadService.this);
                 builder.setTitle("Test dialog");
                 builder.setMessage("Content");
+                builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+//                        takeScreenshot();
+                        Intent i= new Intent(getApplicationContext(), PhotoActivity.class);
+                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        startActivity(i);
+                    }
+                });
                     AlertDialog alert = builder.create();
                     alert.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+
                     alert.show();
-                
+
             }
         });
 
@@ -144,4 +167,13 @@ public class ChatHeadService extends Service implements FloatingViewListener {
 
         return builder.build();
     }
+
+    WindowManager.LayoutParams params = new WindowManager.LayoutParams(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                    | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+                    | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+            PixelFormat.TRANSLUCENT);
 }

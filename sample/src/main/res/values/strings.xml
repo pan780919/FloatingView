@@ -16,4 +16,5 @@
     <string name="touch_finished_position" formatted="false">Current position (%d,%d)</string>
     <string name="deleted_soon">FloatingView will be deleted soon.</string>
     <string name="finish_deleted">FloatingView has been deleted.</string>
+    <string name="title_activity_photo">PhotoActivity</string>
 </resources>
