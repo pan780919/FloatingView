@@ -12,11 +12,13 @@ import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.IBinder;
+import android.speech.tts.TextToSpeech;
 import android.support.v4.app.NotificationCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -24,6 +26,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Date;
+import java.util.Locale;
 
 import jp.co.recruit.floatingview.R;
 import jp.co.recruit_lifestyle.android.floatingview.FloatingViewListener;
@@ -49,6 +52,7 @@ public class ChatHeadService extends Service implements FloatingViewListener {
      * FloatingViewManager
      */
     private FloatingViewManager mFloatingViewManager;
+    TextToSpeech t1;
 
     /**
      * {@inheritDoc}
@@ -60,11 +64,20 @@ public class ChatHeadService extends Service implements FloatingViewListener {
             return START_STICKY;
         }
         context = this;
+        t1=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if(status != TextToSpeech.ERROR) {
+                    t1.setLanguage(Locale.CHINESE);
+                }
+            }
+        });
         final DisplayMetrics metrics = new DisplayMetrics();
         final WindowManager windowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getMetrics(metrics);
         final LayoutInflater inflater = LayoutInflater.from(this);
         final ImageView iconView = (ImageView) inflater.inflate(R.layout.widget_chathead, null, false);
+
         iconView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,9 +90,17 @@ public class ChatHeadService extends Service implements FloatingViewListener {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 //                        takeScreenshot();
-                        Intent i= new Intent(getApplicationContext(), PhotoActivity.class);
-                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        startActivity(i);
+//                        Intent i= new Intent(getApplicationContext(), PhotoActivity.class);
+//                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//
+
+
+                        Toast.makeText(getApplicationContext(), "測試用的文字語音",Toast.LENGTH_SHORT).show();
+
+                        t1.speak("測試用的文字語音", TextToSpeech.QUEUE_FLUSH, null);
+//                        if(t1.isSpeaking()){
+//                            Log.d(TAG, "onClick: "+"isspeck");
+//                        }
                     }
                 });
                     AlertDialog alert = builder.create();
