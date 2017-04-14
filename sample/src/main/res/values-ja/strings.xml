@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FloatingView Sample</string>
+    <string name="app_name">仏教の経典を暗唱</string>
     <string name="chathead_content_title">デモ チャット：アクティブ</string>
     <string name="content_text">デモ実行中</string>
     <string name="mail_content_title">デモ カスタマイズ：アクティブ</string>

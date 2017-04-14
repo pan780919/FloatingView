@@ -20,11 +20,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Adapter;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
 
@@ -82,10 +88,15 @@ public class ChatHeadService extends Service implements FloatingViewListener {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, getString(R.string.chathead_click_message));
+                ListView listView = new ListView(getBaseContext());
+                ArrayList<String> arrayList = new ArrayList(Arrays.asList(getResources().getStringArray(R.array.bookname)));
 
+
+                ArrayAdapter<String>  listAdapter = new ArrayAdapter(getBaseContext(),android.R.layout.simple_list_item_1,arrayList);
+                listView.setAdapter(listAdapter);
                 AlertDialog.Builder builder = new AlertDialog.Builder(ChatHeadService.this);
-                builder.setTitle("Test dialog");
-                builder.setMessage("Content");
+                builder.setTitle("佛經選擇");
+                builder.setView(listView);
                 builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
