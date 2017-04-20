@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -26,29 +27,45 @@ import java.io.IOException;
 import java.util.Date;
 
 import jp.co.recruit.floatingview.R;
+import jp.co.recruit_lifestyle.sample.GtSharedPreferences;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 public class PhotoActivity extends Activity implements  View.OnClickListener{
     private Button shotBtn;
     private  View mScreenView;
+    private ImageView closeImg;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
 
         setContentView(R.layout.activity_photo);
+//
+//        shotBtn = (Button) findViewById(R.id.shotbtn);
+//        mScreenView = (RelativeLayout) findViewById(R.id.screenlayout);
+//        findViewById(R.id.shotbtn).setOnClickListener(this);
+        closeImg = (ImageView) findViewById(R.id.closeimg);
+        findViewById(R.id.closeimg).setOnClickListener(this);
+        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
-        shotBtn = (Button) findViewById(R.id.shotbtn);
-        mScreenView = (RelativeLayout) findViewById(R.id.screenlayout);
-        findViewById(R.id.shotbtn).setOnClickListener(this);
+
 
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.shotbtn:
-                shotBtn.setVisibility(View.GONE);
-                takeScreenshot();
+//            case R.id.shotbtn:
+//                shotBtn.setVisibility(View.GONE);
+//                takeScreenshot();
+//                break;
+            case R.id.closeimg:
+                this.finish();
+                GtSharedPreferences.saveIsFirstUsed(getApplicationContext(),false);
                 break;
         }
 

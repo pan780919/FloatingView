@@ -3,8 +3,10 @@
     package="jp.co.recruit.floatingview">
 
     <!-- 最前面表示時のパーミッション -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
 
     <application
         android:allowBackup="true"

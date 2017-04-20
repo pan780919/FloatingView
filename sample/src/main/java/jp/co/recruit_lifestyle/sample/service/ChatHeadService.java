@@ -37,6 +37,7 @@ import java.util.Locale;
 import jp.co.recruit.floatingview.R;
 import jp.co.recruit_lifestyle.android.floatingview.FloatingViewListener;
 import jp.co.recruit_lifestyle.android.floatingview.FloatingViewManager;
+import jp.co.recruit_lifestyle.sample.GtSharedPreferences;
 
 
 /**
@@ -63,8 +64,9 @@ public class ChatHeadService extends Service implements FloatingViewListener {
     /**
      * {@inheritDoc}
      */
+    boolean isopen =false;
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public int onStartCommand(final Intent intent, int flags, int startId) {
         // 既にManagerが存在していたら何もしない
         if (mFloatingViewManager != null) {
             return START_STICKY;
@@ -101,14 +103,21 @@ public class ChatHeadService extends Service implements FloatingViewListener {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 //                        takeScreenshot();
-//                        Intent i= new Intent(getApplicationContext(), PhotoActivity.class);
-//                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        if(!GtSharedPreferences.getIsFirstUsed(getApplicationContext())){
+                            Intent i= new Intent(getApplicationContext(), PhotoActivity.class);
+                            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            startActivity(i);
+                            GtSharedPreferences.saveIsFirstUsed(getApplicationContext(),true);
+                        }else{
+                            Log.d(TAG, "onClick: "+"isopen");
+                        }
+
 //
-
-
-                        Toast.makeText(getApplicationContext(), "測試用的文字語音",Toast.LENGTH_SHORT).show();
-
-                        t1.speak("測試用的文字語音", TextToSpeech.QUEUE_FLUSH, null);
+//
+//
+//                        Toast.makeText(getApplicationContext(), "測試用的文字語音",Toast.LENGTH_SHORT).show();
+//
+//                        t1.speak("測試用的文字語音", TextToSpeech.QUEUE_FLUSH, null);
 //                        if(t1.isSpeaking()){
 //                            Log.d(TAG, "onClick: "+"isspeck");
 //                        }
