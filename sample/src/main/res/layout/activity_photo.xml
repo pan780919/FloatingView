@@ -12,6 +12,11 @@
         android:layout_alignParentRight="true"
 
         ></ImageView>
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        ></TextView>
     <!--<Button-->
         <!--android:id="@+id/shotbtn"-->
         <!--android:layout_centerInParent="true"-->

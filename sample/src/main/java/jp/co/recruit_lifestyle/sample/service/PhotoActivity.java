@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -18,6 +19,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -35,6 +37,7 @@ public class PhotoActivity extends Activity implements  View.OnClickListener{
     private Button shotBtn;
     private  View mScreenView;
     private ImageView closeImg;
+    private TextView mTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +49,9 @@ public class PhotoActivity extends Activity implements  View.OnClickListener{
 //        shotBtn = (Button) findViewById(R.id.shotbtn);
 //        mScreenView = (RelativeLayout) findViewById(R.id.screenlayout);
 //        findViewById(R.id.shotbtn).setOnClickListener(this);
+        mTextView = (TextView)findViewById(R.id.text);
+        mTextView.setTypeface(Typeface.createFromAsset(getAssets()
+                , "fonts/wp010-05.ttf"));
         closeImg = (ImageView) findViewById(R.id.closeimg);
         findViewById(R.id.closeimg).setOnClickListener(this);
         AdView mAdView = (AdView) findViewById(R.id.adView);
