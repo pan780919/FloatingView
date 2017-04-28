@@ -1,8 +1,10 @@
 package jp.co.recruit_lifestyle.sample.service;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,6 +14,7 @@ import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.app.NotificationCompat;
 import android.util.DisplayMetrics;
@@ -25,6 +28,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -65,6 +71,38 @@ public class ChatHeadService extends Service implements FloatingViewListener {
      * {@inheritDoc}
      */
     boolean isopen =false;
+    InterstitialAd mInterstitialAd;
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Log.d(TAG, "onCreate: "+"in");
+//        mInterstitialAd = new InterstitialAd(this);
+//        mInterstitialAd.setAdUnitId("ca-app-pub-7019441527375550/9918121823");
+//        AdRequest adRequest = new AdRequest.Builder()
+//                .build();
+//
+//        mInterstitialAd.loadAd(adRequest);
+
+        AlarmManager manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        //包装需要执行Service的Intent
+        Intent intent = new Intent(this, this.getClass());
+        PendingIntent pendingIntent = PendingIntent.getService(this, 0,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        //触发服务的起始时间
+        long triggerAtTime = SystemClock.elapsedRealtime();
+        Log.d(TAG, "onCreate: "+triggerAtTime+"");
+        //使用AlarmManger的setRepeating方法设置定期执行的时间间隔（seconds秒）和需要执行的Service
+        manager.setRepeating(AlarmManager.RTC_WAKEUP, triggerAtTime, 3000, pendingIntent);
+
+//        if(mInterstitialAd.isLoaded()){
+//            mInterstitialAd.show();
+//            Log.d(TAG, "onCreate:"+"show");
+//        }
+
+
+
+    }
+
     @Override
     public int onStartCommand(final Intent intent, int flags, int startId) {
         // 既にManagerが存在していたら何もしない
@@ -143,7 +181,16 @@ public class ChatHeadService extends Service implements FloatingViewListener {
 
         return START_REDELIVER_INTENT;
     }
-
+    /**
+     *
+     * 1.START_STICKY:
+     當Service在執行時被砍掉後，若沒有新的intent進來，
+     Service會停留在started state，但intent資料不會被保留
+     2.START_NOT_STICKY或START_REDELIVER_INTENT:
+     當Service在執行時被砍掉後，若沒有新的intent進來，
+     service會離開started  state，若沒有很明確的再啟動，
+     將不會產生新的service物件
+     */
     /**
      * {@inheritDoc}
      */
@@ -218,3 +265,4 @@ public class ChatHeadService extends Service implements FloatingViewListener {
                     | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
             PixelFormat.TRANSLUCENT);
 }
+
