@@ -82,17 +82,17 @@ public class ChatHeadService extends Service implements FloatingViewListener {
 //                .build();
 //
 //        mInterstitialAd.loadAd(adRequest);
-
-        AlarmManager manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        //包装需要执行Service的Intent
-        Intent intent = new Intent(this, this.getClass());
-        PendingIntent pendingIntent = PendingIntent.getService(this, 0,
-                intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        //触发服务的起始时间
-        long triggerAtTime = SystemClock.elapsedRealtime();
-        Log.d(TAG, "onCreate: "+triggerAtTime+"");
-        //使用AlarmManger的setRepeating方法设置定期执行的时间间隔（seconds秒）和需要执行的Service
-        manager.setRepeating(AlarmManager.RTC_WAKEUP, triggerAtTime, 3000, pendingIntent);
+//
+//        AlarmManager manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+//        //包装需要执行Service的Intent
+//        Intent intent = new Intent(this, this.getClass());
+//        PendingIntent pendingIntent = PendingIntent.getService(this, 0,
+//                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//        //触发服务的起始时间
+//        long triggerAtTime = SystemClock.elapsedRealtime();
+//        Log.d(TAG, "onCreate: "+triggerAtTime+"");
+//        //使用AlarmManger的setRepeating方法设置定期执行的时间间隔（seconds秒）和需要执行的Service
+//        manager.setRepeating(AlarmManager.RTC_WAKEUP, triggerAtTime, 3000, pendingIntent);
 
 //        if(mInterstitialAd.isLoaded()){
 //            mInterstitialAd.show();
@@ -197,6 +197,7 @@ public class ChatHeadService extends Service implements FloatingViewListener {
     @Override
     public void onDestroy() {
         destroy();
+        GtSharedPreferences.saveIsFirstUsed(getApplicationContext(),false);
         super.onDestroy();
     }
 

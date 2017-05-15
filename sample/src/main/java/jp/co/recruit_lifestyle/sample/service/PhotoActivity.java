@@ -13,6 +13,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -31,13 +32,27 @@ import java.util.Date;
 import jp.co.recruit.floatingview.R;
 import jp.co.recruit_lifestyle.sample.GtSharedPreferences;
 
+import com.adbert.AdbertADView;
+import com.adbert.AdbertListener;
+import com.adbert.AdbertLoopADView;
+import com.adbert.AdbertOrientation;
+import com.adbert.ExpandVideoPosition;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.mediation.customevent.CustomEventBannerListener;
+import com.jackPan.ReadtheBuddha.AdbertMediation;
+
 public class PhotoActivity extends Activity implements  View.OnClickListener{
     private Button shotBtn;
     private  View mScreenView;
     private ImageView closeImg;
     private TextView mTextView;
+    AdbertADView adbertView;
+    String appId = "";  //Pleaser enter your appId
+    String appKey = ""; //Pleaser enter your appKey
+    String admob_banner = ""; //Pleaser enter your banner unit id
+    RelativeLayout adLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,11 +69,11 @@ public class PhotoActivity extends Activity implements  View.OnClickListener{
                 , "fonts/wp010-05.ttf"));
         closeImg = (ImageView) findViewById(R.id.closeimg);
         findViewById(R.id.closeimg).setOnClickListener(this);
-        AdView mAdView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+//        AdView mAdView = (AdView) findViewById(R.id.adView);
+//        AdRequest adRequest = new AdRequest.Builder().build();
+//        mAdView.loadAd(adRequest);
 
-
+        btnAction_banner_nonmediation();
 
     }
 
@@ -70,8 +85,9 @@ public class PhotoActivity extends Activity implements  View.OnClickListener{
 //                takeScreenshot();
 //                break;
             case R.id.closeimg:
-                this.finish();
                 GtSharedPreferences.saveIsFirstUsed(getApplicationContext(),false);
+                this.finish();
+
                 break;
         }
 
@@ -113,5 +129,31 @@ public class PhotoActivity extends Activity implements  View.OnClickListener{
         startActivity(intent);
     }
 
+    private static final String TAG = "PhotoActivity";
+    public void btnAction_banner_nonmediation() {
 
+        adbertView = (AdbertADView) findViewById(R.id.adbertADView);
+        adbertView.setMode(AdbertOrientation.NORMAL);
+        adbertView.setExpandVideo(ExpandVideoPosition.BOTTOM);
+        adbertView.setFullScreen(false);
+        adbertView.setBannerSize(AdSize.SMART_BANNER);
+//        adbertView.setAPPID("20170427000002", "20170427000002");
+        adbertView.setMediationAPPID("20170427000002|20170427000002");
+        adbertView.setListener(new AdbertListener() {
+            @Override
+            public void onReceive(String msg) {
+                Log.d(TAG, "onReceive: "+msg);
+
+            }
+
+            @Override
+            public void onFailedReceive(String msg) {
+                Log.d(TAG, "onFailedReceive: "+msg);
+
+
+            }
+        });
+
+        adbertView.start();
+    }
 }
